@@ -18,3 +18,7 @@ export function validUsername(str) {
   const valid_map = ['admin', 'editor']
   return valid_map.indexOf(str.trim()) >= 0
 }
+export function validModile(str) {
+  const pattern = /^1[35789]\d{9}$/
+  return pattern.test(str)
+}

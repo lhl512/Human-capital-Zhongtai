@@ -8,15 +8,15 @@
         </h3>
       </div>
 
-      <el-form-item prop="username">
+      <el-form-item prop="modile">
         <span class="svg-container">
           <svg-icon icon-class="user" />
         </span>
         <el-input
-          ref="username"
-          v-model="loginForm.username"
+          ref="modile"
+          v-model="loginForm.modile"
           placeholder="请输入11位手机号"
-          name="username"
+          name="modile"
           type="text"
           tabindex="1"
           auto-complete="on"
@@ -55,33 +55,28 @@
 </template>
 
 <script>
-import { validUsername } from '@/utils/validate'
+import { validModile } from '@/utils/validate'
 
 export default {
   name: 'Login',
   data() {
-    const validateUsername = (rule, value, callback) => {
-      if (!validUsername(value)) {
-        callback(new Error('请输入11位手机号'))
-      } else {
-        callback()
-      }
-    }
-    const validatePassword = (rule, value, callback) => {
-      if (value.length < 6) {
-        callback(new Error('密码最少6位'))
+    const validateModile = (rule, value, callback) => {
+      if (!validModile(value)) {
+        callback(new Error('请输入合法的手机号'))
       } else {
         callback()
       }
     }
     return {
       loginForm: {
-        username: 'admin',
-        password: '111111'
+        modile: '13800000002',
+        password: '123456'
       },
       loginRules: {
-        username: [{ required: true, trigger: 'blur', validator: validateUsername }],
-        password: [{ required: true, trigger: 'blur', validator: validatePassword }]
+        modile: [{ required: true, trigger: 'blur', message: '手机号不能为空' }, { trigger: 'blur', validator: validateModile }],
+        password: [{ required: true, trigger: 'blur', message: '密码不能为空' }, {
+          trigger: 'blur', min: 6, max: 16, message: '密码在6~16位之间'
+        }]
       },
       loading: false,
       passwordType: 'password',
