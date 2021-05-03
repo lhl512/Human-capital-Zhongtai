@@ -8,15 +8,15 @@
         </h3>
       </div>
 
-      <el-form-item prop="modile">
+      <el-form-item prop="mobile">
         <span class="svg-container">
           <svg-icon icon-class="user" />
         </span>
         <el-input
-          ref="modile"
-          v-model="loginForm.modile"
+          ref="mobile"
+          v-model="loginForm.mobile"
           placeholder="请输入11位手机号"
-          name="modile"
+          name="mobile"
           type="text"
           tabindex="1"
           auto-complete="on"
@@ -56,7 +56,7 @@
 
 <script>
 import { validModile } from '@/utils/validate'
-
+import { login } from '@/api/user'
 export default {
   name: 'Login',
   data() {
@@ -69,11 +69,11 @@ export default {
     }
     return {
       loginForm: {
-        modile: '13800000002',
+        mobile: '13800000002',
         password: '123456'
       },
       loginRules: {
-        modile: [{ required: true, trigger: 'blur', message: '手机号不能为空' }, { trigger: 'blur', validator: validateModile }],
+        mobile: [{ required: true, trigger: 'blur', message: '手机号不能为空' }, { trigger: 'blur', validator: validateModile }],
         password: [{ required: true, trigger: 'blur', message: '密码不能为空' }, {
           trigger: 'blur', min: 6, max: 16, message: '密码在6~16位之间'
         }]
@@ -103,20 +103,22 @@ export default {
       })
     },
     handleLogin() {
-      this.$refs.loginForm.validate(valid => {
-        if (valid) {
-          this.loading = true
-          this.$store.dispatch('user/login', this.loginForm).then(() => {
-            this.$router.push({ path: this.redirect || '/' })
-            this.loading = false
-          }).catch(() => {
-            this.loading = false
-          })
-        } else {
-          console.log('error submit!!')
-          return false
-        }
-      })
+      // this.$refs.loginForm.validate(valid => {
+      //   if (valid) {
+      //     this.loading = true
+      //     this.$store.dispatch('user/login', this.loginForm).then(() => {
+      //       this.$router.push({ path: this.redirect || '/' })
+      //       this.loading = false
+      //     }).catch(() => {
+      //       this.loading = false
+      //     })
+      //   } else {
+      //     console.log('error submit!!')
+      //     return false
+      //   }
+      // })
+
+      login(this.loginForm)
     }
   }
 }
@@ -156,8 +158,9 @@ $cursor: #fff;
       caret-color: $cursor;
 
       &:-webkit-autofill {
-        box-shadow: 0 0 0px 1000px $bg inset !important;
-        -webkit-text-fill-color: $cursor !important;
+       transition-delay: 99999s;
+       -webkit-transition-delay: 99999s;
+       transition: color 99999s ease-out, background-color 99999s ease-out; -webkit-transition: color 99999s ease-out, background-color 99999s ease-out;
       }
     }
   }
