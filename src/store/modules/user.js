@@ -16,10 +16,17 @@ const mutations = {
 const actions = {
   async login(store, data) {
     const res = await login(data)
-    console.log(res)
+    try {
+      console.log('这里成功了')
 
-    const token = res.data.data
-    store.commit('setToken', token)
+      console.log(res)
+
+      // const token = res.data.data
+      store.commit('setToken', res)
+    } catch (error) {
+      console.log('这里报错了')
+      console.log(error)
+    }
   }
 }
 

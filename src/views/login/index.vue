@@ -102,23 +102,13 @@ export default {
         this.$refs.password.focus()
       })
     },
-    handleLogin() {
-      // this.$refs.loginForm.validate(valid => {
-      //   if (valid) {
-      //     this.loading = true
-      //     this.$store.dispatch('user/login', this.loginForm).then(() => {
-      //       this.$router.push({ path: this.redirect || '/' })
-      //       this.loading = false
-      //     }).catch(() => {
-      //       this.loading = false
-      //     })
-      //   } else {
-      //     console.log('error submit!!')
-      //     return false
-      //   }
-      // })
-      this.$store.dispatch('user/login', this.loginForm)
-      console.log(this.$store.getters.token)
+    async  handleLogin() {
+      await this.$refs.loginForm.validate()
+      this.loading = true
+      await this.$store.dispatch('user/login', this.loginForm)
+      this.loading = false
+      this.$router.push({ path: '/' })
+      // console.log(this.$store.getters.token)
     }
   }
 }
