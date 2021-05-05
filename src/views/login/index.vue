@@ -56,7 +56,7 @@
 
 <script>
 import { validModile } from '@/utils/validate'
-import { login } from '@/api/user'
+
 export default {
   name: 'Login',
   data() {
@@ -117,8 +117,8 @@ export default {
       //     return false
       //   }
       // })
-
-      login(this.loginForm)
+      this.$store.dispatch('user/login', this.loginForm)
+      console.log(this.$store.state.user.token)
     }
   }
 }
