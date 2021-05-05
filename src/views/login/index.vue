@@ -118,7 +118,7 @@ export default {
       //   }
       // })
       this.$store.dispatch('user/login', this.loginForm)
-      console.log(this.$store.state.user.token)
+      console.log(this.$store.getters.token)
     }
   }
 }

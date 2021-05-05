@@ -1,9 +1,11 @@
 import { login } from '@/api/user'
+import { setToken, getToken } from '@/utils/auth'
 const state = {
-  token: null
+  token: getToken()
 }
 const mutations = {
   setToken(state, data) {
+    setToken(data)
     state.token = data
   },
   removeToken(state) {
