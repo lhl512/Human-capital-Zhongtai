@@ -1,6 +1,6 @@
 import router from '@/router'
 import store from '@/store'
-
+// 导航守卫
 router.beforeEach(async(to, from, next) => {
   // 白名单
   const whiteList = ['/login', '/404']

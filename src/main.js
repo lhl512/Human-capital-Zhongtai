@@ -23,6 +23,8 @@ import '@/permission' // permission control
 Vue.use(ElementUI)
 
 Vue.config.productionTip = false
+import { imgerr } from '@/directive'
+Vue.directive('imgerr', imgerr)
 
 new Vue({
   el: '#app',

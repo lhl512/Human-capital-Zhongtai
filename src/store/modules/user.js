@@ -1,5 +1,5 @@
 import { login, getUserInfo, getUserDetailById } from '@/api/user'
-import { setToken, getToken } from '@/utils/auth'
+import { setToken, getToken, removeToken, setTiem } from '@/utils/auth'
 const state = {
   token: getToken(),
   userInfo: {}
@@ -13,6 +13,7 @@ const mutations = {
   // 删除token
   removeToken(state) {
     state.token = null
+    removeToken()
   },
   // 设置用户信息
   setUserInfo(state, userInfo) {
@@ -35,6 +36,7 @@ const actions = {
 
       // const token = res.data.data
       store.commit('setToken', res)
+      setTiem()
     } catch (error) {
       console.log('这里报错了')
       console.log(error)
@@ -51,6 +53,11 @@ const actions = {
     console.log(data)
 
     return data
+  },
+  // 退出
+  loginout(store) {
+    store.commit('removeToken')
+    store.commit('removeUserInfo')
   }
 }
 

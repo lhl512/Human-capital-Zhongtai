@@ -1,6 +1,14 @@
 import axios from 'axios'
 import { Message } from 'element-ui'
 import store from '@/store'
+import router from '@/router'
+import { getTime } from '@/utils/auth'
+const checkTimeout = () => {
+  const currentTime = (new Date()).getTime()
+  const loginTime = getTime()
+  const duration = 1000 * 60 * 60 * 2
+  return currentTime - loginTime > duration
+}
 // create an axios instance
 const service = axios.create({
   baseURL: process.env.VUE_APP_BASE_API, // url = base url + request url
@@ -12,7 +20,13 @@ const service = axios.create({
 service.interceptors.request.use(config => {
   // 注入token
   if (store.getters.token) {
-    config.headers['Authorization'] = `Bearer ${store.getters.token}`
+    if (checkTimeout()) {
+      store.dispatch('user/loginout')
+      router.push('/login')
+      return Promise.reject(new Error('token 已超时'))
+    } else {
+      config.headers['Authorization'] = `Bearer ${store.getters.token}`
+    }
   }
   return config
 }, error => {
@@ -37,6 +51,10 @@ service.interceptors.response.use(res => {
   }
 }, err => {
   // 网络请求层面的失败
+  if (err.response && err.response.data && err.response.data.code === 10002) {
+    store.dispatch('user/loginout')
+    router.push('/login')
+  }
   Message.error(err.message)
   return Promise.reject(err)
 }
