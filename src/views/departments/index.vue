@@ -9,11 +9,12 @@
           <!-- 传入内容 插槽内容 会循环多次 有多少节点 就循环多少次 -->
           <!-- 作用域插槽 slot-scope="obj" 接收传递给插槽的数据   data 每个节点的数据对象-->
           <template #default="scoped">
-            <TreeTools :tree-noods="scoped.data" :is-root="false" @delDepartments="getDepartments" />
+            <TreeTools :tree-noods="scoped.data" :is-root="false" @delDepartments="getDepartments" @addDepts="addDepts" />
           </template>
 
         </el-tree>
       </el-card>
+      <AddDept :show-add-dept="showDept" />
     </div>
   </div>
 </template>
@@ -22,9 +23,11 @@
 import TreeTools from './components/tree-tools'
 import { getDepartments } from '@/api/departments'
 import { listToTreeData } from '@/utils'
+import AddDept from './components/add-dept'
 export default {
   components: {
-    TreeTools
+    TreeTools,
+    AddDept
   },
   data() {
     return {
@@ -32,7 +35,8 @@ export default {
       departs: [],
       defaultProps: {
         label: 'name' // 表示 从这个属性显示内容
-      }
+      },
+      showDept: false
     }
   },
   mounted() {
@@ -43,6 +47,9 @@ export default {
       const res = await getDepartments()
       // console.log(res)
       this.departs = listToTreeData(res.depts, '')
+    },
+    addDepts() {
+      this.showDept = true
     }
   }
 
