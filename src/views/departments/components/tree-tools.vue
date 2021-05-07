@@ -19,7 +19,7 @@
               <el-dropdown-menu slot="dropdown">
                 <el-dropdown-item>添加子部门</el-dropdown-item>
                 <el-dropdown-item v-if="!isRoot">编辑部门</el-dropdown-item>
-                <el-dropdown-item v-if="!isRoot">删除部门</el-dropdown-item>
+                <el-dropdown-item v-if="!isRoot" @click.native="delDepartments">删除部门</el-dropdown-item>
               </el-dropdown-menu>
             </el-dropdown>
           </el-col>
@@ -30,6 +30,7 @@
 </template>
 
 <script>
+import { delDepartments } from '@/api/departments'
 export default {
   props: {
     treeNoods: {
@@ -39,6 +40,14 @@ export default {
     isRoot: {
       type: Boolean,
       required: true
+    }
+  },
+  methods: {
+    async delDepartments() {
+      await this.$confirm('是否确认删除')
+      await delDepartments(this.treeNoods.id)
+      this.$message.success('删除成功')
+      this.$emit('delDepartments')
     }
   }
 }
