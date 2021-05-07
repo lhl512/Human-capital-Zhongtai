@@ -29,3 +29,12 @@ export function getDepartmentDetail(id) {
   })
 }
 
+// 根据id修改部门详情
+export function editDepartments(data) {
+  return request({
+    method: 'put',
+    url: '/company/department/' + data.id,
+    data
+  })
+}
+

@@ -1,6 +1,6 @@
 <template>
   <!-- 新增部门的弹层 -->
-  <el-dialog title="新增部门" :visible="showAddDept" @close="btnCancel">
+  <el-dialog :title="formData.id?'编辑部门':'新增部门'" :visible="showAddDept" @close="btnCancel">
     <!-- 表单组件  el-form   label-width设置label的宽度   -->
     <!-- 匿名插槽 -->
     <el-form ref="addDept" label-width="120px" :model="formData" :rules="rules">
@@ -32,7 +32,7 @@
 </template>
 
 <script>
-import { getDepartments, addDepartments, getDepartmentDetail } from '@/api/departments'
+import { getDepartments, addDepartments, getDepartmentDetail, editDepartments } from '@/api/departments'
 import { getUserSimle } from '@/api/user'
 export default {
   props: {
@@ -47,20 +47,28 @@ export default {
   },
   data() {
     const checkRepeatName = async(rule, value, callback) => {
-      // 同一部门下不能有重名
-      // 1. 所有部门列表
       const { depts } = await getDepartments()
-      // 2. 当前被点击作为父部门的那个id
-      // const parent = this.treeNode
-      // 3. 当前用户正在输入的值
-      // value
-      const isRepeat = depts.filter(item => item.pid === this.treeNodes.id)
-        .some(item => item.name === value)
-      isRepeat ? callback(new Error('同部门下不能重名')) : callback()
+      let isRepeat = false
+      if (this.formData.id) {
+        isRepeat = depts.filter(item => item.pid === this.treeNodes.id && item.id !== this.treeNodes.id)
+          .some(item => item.name === value)
+        isRepeat ? callback(new Error('同部门下不能重名')) : callback()
+      } else {
+        isRepeat = depts.filter(item => item.pid === this.treeNodes.id)
+          .some(item => item.name === value)
+        isRepeat ? callback(new Error('同部门下不能重名')) : callback()
+      }
     }
     const checkRepeatCode = async(rule, value, callback) => {
       const { depts } = await getDepartments()
-      const isRepeat = depts.some(item => item.code === value)
+      let isRepeat = false
+      if (this.formData.id) {
+        // 编辑
+        isRepeat = depts.some(item => item.code === value && item.id !== this.treeNodes.id)
+      } else {
+        // 新增
+        isRepeat = depts.some(item => item.code === value)
+      }
       isRepeat ? callback(new Error('部门代码不能重复')) : callback()
     }
     return {
@@ -98,10 +106,12 @@ export default {
       this.userSimle = await getUserSimle()
     },
     async btnOK() {
-      // this.formData.pid = this.treeNodes.id
-      // console.log(this.formData)
       await this.$refs.addDept.validate()
-      await addDepartments({ ...this.formData, pid: this.treeNodes.id })
+      if (this.formData.id) {
+        await editDepartments(this.formData)
+      } else {
+        await addDepartments({ ...this.formData, pid: this.treeNodes.id })
+      }
       this.$message.success('操作成功')
       // 弹窗关闭
       this.$emit('update:showAddDept', false)
@@ -114,6 +124,12 @@ export default {
       }, 200)
     },
     btnCancel() {
+      this.formData = {
+        code: '',
+        introduce: '',
+        manager: '',
+        name: ''
+      }
       this.$refs.addDept.resetFields()
       this.$emit('update:showAddDept', false)
     },
