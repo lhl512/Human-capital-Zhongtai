@@ -115,3 +115,22 @@ export function param2Obj(url) {
   })
   return obj
 }
+// 封装组织树状结构
+
+export function listToTreeData(list, pid) {
+  list.forEach(item => {
+    // 找到子级
+    if (item.id !== pid) {
+      // 找到顶级
+      const parent = list.find(el => el.id === item.pid)
+      // console.log(parent)
+
+      if (parent) {
+        parent.children = parent.children || []
+        parent.children.push(item)
+      }
+    }
+  })
+  // 过滤，保留顶级
+  return list.filter(item => item.pid === pid)
+}

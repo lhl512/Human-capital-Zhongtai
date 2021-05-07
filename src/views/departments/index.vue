@@ -21,6 +21,7 @@
 <script>
 import TreeTools from './components/tree-tools'
 import { getDepartments } from '@/api/departments'
+import { listToTreeData } from '@/utils'
 export default {
   components: {
     TreeTools
@@ -41,7 +42,8 @@ export default {
     async getDepartments() {
       const res = await getDepartments()
       console.log(res)
-      this.departs = res.depts
+
+      this.departs = listToTreeData(res.depts, '')
     }
   }
 
