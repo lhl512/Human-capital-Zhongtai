@@ -9,12 +9,13 @@
           <!-- 传入内容 插槽内容 会循环多次 有多少节点 就循环多少次 -->
           <!-- 作用域插槽 slot-scope="obj" 接收传递给插槽的数据   data 每个节点的数据对象-->
           <template #default="scoped">
-            <TreeTools :tree-noods="scoped.data" :is-root="false" @delDepartments="getDepartments" @addDepts="addDepts" />
+            <TreeTools :tree-noods="scoped.data" :is-root="false" @delDepartments="getDepartments" @addDepts="addDepts" @editDepts="editDepts" />
           </template>
 
         </el-tree>
       </el-card>
       <AddDept
+        ref="addDept"
         :show-add-dept.sync="showAddDept"
         :tree-nodes="treeNodes"
         @addDepartments="getDepartments"
@@ -56,6 +57,11 @@ export default {
     addDepts(treeNodes) {
       this.showAddDept = true
       this.treeNodes = treeNodes
+    },
+    editDepts(treeNodes) {
+      this.showAddDept = true
+      this.treeNodes = treeNodes
+      this.$refs.addDept.getDepartmentDetail(treeNodes.id)
     }
   }
 

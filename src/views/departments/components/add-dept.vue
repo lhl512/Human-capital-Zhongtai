@@ -32,7 +32,7 @@
 </template>
 
 <script>
-import { getDepartments, addDepartments } from '@/api/departments'
+import { getDepartments, addDepartments, getDepartmentDetail } from '@/api/departments'
 import { getUserSimle } from '@/api/user'
 export default {
   props: {
@@ -116,6 +116,9 @@ export default {
     btnCancel() {
       this.$refs.addDept.resetFields()
       this.$emit('update:showAddDept', false)
+    },
+    async getDepartmentDetail(id) {
+      this.formData = await getDepartmentDetail(id)
     }
   }
 }
