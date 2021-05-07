@@ -3,7 +3,7 @@
     <div class="app-container">
       <el-card class="tree-card">
         <!-- 用了一个行列布局 -->
-        <TreeTools :tree-noods="company" :is-root="true" />
+        <TreeTools :tree-noods="company" :is-root="true" @addDepts="addDepts" />
         <hr>
         <el-tree :data="departs" :props="{label:'name'}" :default-expand-all="true">
           <!-- 传入内容 插槽内容 会循环多次 有多少节点 就循环多少次 -->
@@ -31,7 +31,7 @@ export default {
   },
   data() {
     return {
-      company: { name: '江苏传智播客教育科技股份有限公司', manager: '负责人' },
+      company: { name: '江苏传智播客教育科技股份有限公司', manager: '负责人', id: '' },
       departs: [],
       defaultProps: {
         label: 'name' // 表示 从这个属性显示内容

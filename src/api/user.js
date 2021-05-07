@@ -20,9 +20,10 @@ export function getUserDetailById(id) {
     url: `/sys/user/${id}`
   })
 }
-export function logout() {
+
+// 获取员工简单信息
+export function getUserSimle() {
   return request({
-    url: '/vue-admin-template/user/logout',
-    method: 'post'
+    url: '/sys/user/simple'
   })
 }

@@ -13,3 +13,4 @@ export function delDepartments(id) {
     url: `/company/department/${id}`
   })
 }
+

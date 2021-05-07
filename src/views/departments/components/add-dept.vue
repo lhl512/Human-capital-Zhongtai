@@ -11,7 +11,9 @@
         <el-input v-model.trim="formData.code" style="width:80%" placeholder="1-50个字符" />
       </el-form-item>
       <el-form-item label="部门负责人" prop="manager">
-        <el-select v-model="formData.manager" style="width:80%" placeholder="请选择" />
+        <el-select v-model="formData.manager" style="width:80%" placeholder="请选择" @focus="getUserSimle">
+          <el-option v-for="item in userSimle" :key="item.id" :value="item.username" :label="item.username" />
+        </el-select>
       </el-form-item>
       <el-form-item label="部门介绍" prop="introduce">
         <el-input v-model.trim="formData.introduce" style="width:80%" placeholder="1-300个字符" type="textarea" :rows="3" />
@@ -31,6 +33,7 @@
 
 <script>
 import { getDepartments } from '@/api/departments'
+import { getUserSimle } from '@/api/user'
 export default {
   props: {
     showAddDept: {
@@ -55,8 +58,13 @@ export default {
         .some(item => item.name === value)
       isRepeat ? callback(new Error('同部门下不能重名')) : callback()
     }
+    const checkRepeatCode = async(rule, value, callback) => {
+      const { depts } = await getDepartments()
+      const isRepeat = depts.some(item => item.code === value)
+      isRepeat ? callback(new Error('部门代码不能重复')) : callback()
+    }
     return {
-
+      userSimle: [],
       formData: {
         name: '', // 部门名称
         code: '', // 部门编码
@@ -71,7 +79,9 @@ export default {
         ],
         code: [
           { required: true, message: '该项不能为空', trigger: 'blur' },
-          { trigger: 'blur', max: 50, message: '最多输入50位字符' }
+          { trigger: 'blur', max: 50, message: '最多输入50位字符' },
+          { trigger: 'blur', validator: checkRepeatCode }
+
         ],
         manager: [
           { required: true, message: '该项不能为空', trigger: 'blur' }
@@ -81,6 +91,11 @@ export default {
           { trigger: 'blur', max: 300, message: '最多输入300位字符' }
         ]
       }
+    }
+  },
+  methods: {
+    async  getUserSimle() {
+      this.userSimle = await getUserSimle()
     }
   }
 }
