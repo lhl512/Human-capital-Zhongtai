@@ -14,7 +14,7 @@
 
         </el-tree>
       </el-card>
-      <AddDept :show-add-dept="showDept" />
+      <AddDept :show-add-dept="showDept" :tree-nodes="treeNodes" />
     </div>
   </div>
 </template>
@@ -36,7 +36,8 @@ export default {
       defaultProps: {
         label: 'name' // 表示 从这个属性显示内容
       },
-      showDept: false
+      showDept: false,
+      treeNodes: {}
     }
   },
   mounted() {
@@ -48,8 +49,9 @@ export default {
       // console.log(res)
       this.departs = listToTreeData(res.depts, '')
     },
-    addDepts() {
+    addDepts(treeNodes) {
       this.showDept = true
+      this.treeNodes = treeNodes
     }
   }
 
