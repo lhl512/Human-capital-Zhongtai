@@ -1,9 +1,9 @@
 <template>
   <!-- 新增部门的弹层 -->
-  <el-dialog title="新增部门" :visible="showAddDept">
+  <el-dialog title="新增部门" :visible="showAddDept" @close="btnCancel">
     <!-- 表单组件  el-form   label-width设置label的宽度   -->
     <!-- 匿名插槽 -->
-    <el-form label-width="120px" :model="formData" :rules="rules">
+    <el-form ref="addDept" label-width="120px" :model="formData" :rules="rules">
       <el-form-item label="部门名称" prop="name">
         <el-input v-model.trim="formData.name" style="width:80%" placeholder="1-50个字符" />
       </el-form-item>
@@ -11,7 +11,7 @@
         <el-input v-model.trim="formData.code" style="width:80%" placeholder="1-50个字符" />
       </el-form-item>
       <el-form-item label="部门负责人" prop="manager">
-        <el-select v-model="formData.manager" style="width:80%" placeholder="请选择" @focus="getUserSimle">
+        <el-select v-model="formData.manager" style="width:80%" placeholder="请选择" @focus="getUserSimle" @blur="checkManager">
           <el-option v-for="item in userSimle" :key="item.id" :value="item.username" :label="item.username" />
         </el-select>
       </el-form-item>
@@ -23,8 +23,8 @@
     <el-row slot="footer" type="flex" justify="center">
       <!-- 列被分为24 -->
       <el-col :span="6">
-        <el-button type="primary" size="small">确定</el-button>
-        <el-button size="small">取消</el-button>
+        <el-button type="primary" size="small" @click="btnOK">确定</el-button>
+        <el-button size="small" @click="btnCancel">取消</el-button>
       </el-col>
     </el-row>
   </el-dialog>
@@ -32,7 +32,7 @@
 </template>
 
 <script>
-import { getDepartments } from '@/api/departments'
+import { getDepartments, addDepartments } from '@/api/departments'
 import { getUserSimle } from '@/api/user'
 export default {
   props: {
@@ -94,8 +94,28 @@ export default {
     }
   },
   methods: {
-    async  getUserSimle() {
+    async getUserSimle() {
       this.userSimle = await getUserSimle()
+    },
+    async btnOK() {
+      // this.formData.pid = this.treeNodes.id
+      // console.log(this.formData)
+      await this.$refs.addDept.validate()
+      await addDepartments({ ...this.formData, pid: this.treeNodes.id })
+      this.$message.success('操作成功')
+      // 弹窗关闭
+      this.$emit('update:showAddDept', false)
+      // 加载新数据
+      this.$emit('addDepartments')
+    },
+    checkManager() {
+      setTimeout(() => {
+        this.$refs.addDept.validateField('manager')
+      }, 200)
+    },
+    btnCancel() {
+      this.$refs.addDept.resetFields()
+      this.$emit('update:showAddDept', false)
     }
   }
 }

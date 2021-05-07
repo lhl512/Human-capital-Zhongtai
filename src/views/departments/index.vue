@@ -5,7 +5,7 @@
         <!-- 用了一个行列布局 -->
         <TreeTools :tree-noods="company" :is-root="true" @addDepts="addDepts" />
         <hr>
-        <el-tree :data="departs" :props="{label:'name'}" :default-expand-all="true">
+        <el-tree :data="departs" :props="{label:'name'}" :default-expand-all="true" :expand-on-click-node="false">
           <!-- 传入内容 插槽内容 会循环多次 有多少节点 就循环多少次 -->
           <!-- 作用域插槽 slot-scope="obj" 接收传递给插槽的数据   data 每个节点的数据对象-->
           <template #default="scoped">
@@ -14,7 +14,11 @@
 
         </el-tree>
       </el-card>
-      <AddDept :show-add-dept="showDept" :tree-nodes="treeNodes" />
+      <AddDept
+        :show-add-dept.sync="showAddDept"
+        :tree-nodes="treeNodes"
+        @addDepartments="getDepartments"
+      />
     </div>
   </div>
 </template>
@@ -36,7 +40,7 @@ export default {
       defaultProps: {
         label: 'name' // 表示 从这个属性显示内容
       },
-      showDept: false,
+      showAddDept: false,
       treeNodes: {}
     }
   },
@@ -50,7 +54,7 @@ export default {
       this.departs = listToTreeData(res.depts, '')
     },
     addDepts(treeNodes) {
-      this.showDept = true
+      this.showAddDept = true
       this.treeNodes = treeNodes
     }
   }
