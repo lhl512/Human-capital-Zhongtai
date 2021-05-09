@@ -65,7 +65,7 @@
             </el-form></el-tab-pane>
         </el-tabs>
         <el-dialog :title="roleForm.id?'编辑角色':'新增角色'" :visible="showDialog" @close="btnCancel">
-          <el-form ref="roleForm" :model="roleForm" :rules="rules" label-width="120px">
+          <el-form v-if="showDialog" ref="roleForm" :model="roleForm" :rules="rules" label-width="120px">
             <el-form-item label="角色名称" prop="name">
               <el-input v-model="roleForm.name" />
             </el-form-item>
@@ -170,6 +170,9 @@ export default {
       }).then(async() => {
         try {
           await deleteRole(id)
+          if (this.roleList.length === 1 && this.params.page > 1) {
+            this.params.page--
+          }
           this.getRoleList()
           this.$message({
             type: 'success',
@@ -189,7 +192,6 @@ export default {
     async  editRole(id) {
       this.showDialog = true
       this.roleForm = await getRoleInfo(id)
-      // console.log(res)
     },
     btnCancel() {
       this.showDialog = false
