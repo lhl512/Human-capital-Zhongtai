@@ -18,9 +18,11 @@
               <el-table-column label="角色名称" width="240" prop="name" />
               <el-table-column label="描述" prop="description" />
               <el-table-column label="操作">
-                <el-button size="small" type="success">分配权限</el-button>
-                <el-button size="small" type="primary">编辑</el-button>
-                <el-button size="small" type="danger" @click="deleteRole">删除</el-button>
+                <template slot-scope="{row}">
+                  <el-button size="small" type="success">分配权限</el-button>
+                  <el-button size="small" type="primary">编辑</el-button>
+                  <el-button size="small" type="danger" @click="deleteRole(row.id)">删除</el-button>
+                </template>
               </el-table-column>
             </el-table>
             <!-- 分页组件 -->
@@ -28,10 +30,12 @@
               <!-- 分页组件 -->
               <el-pagination
                 :current-page.sync="currentPage1"
-                :page-size="3"
-                layout="prev, pager, next"
+                :page-size="params.pagesize"
+                :page-sizes="[2, 3, 4, 5]"
+                layout="total,sizes,prev, pager, next,jumper"
                 :total="params.total"
                 @current-change="handleCurrentChange"
+                @size-change="handleSizeChange"
                 @next-click="nextBtn"
                 @prev-click="prevBtn"
               />
@@ -74,8 +78,8 @@ export default {
       activeName: 'first',
       params: {
         page: 1,
-        pagesize: 3,
-        total: ''
+        pagesize: 2,
+        total: 0
       },
       roleList: [],
       formData: {
@@ -95,17 +99,22 @@ export default {
     handleClick(tab, event) {
       console.log(tab, event)
     },
+    handleSizeChange(val) {
+      this.params.pagesize = val
+      this.getRoleList()
+      // console.log(val)
+    },
     handleCurrentChange(val) {
       this.params.page = val
       this.getRoleList()
-      console.log(`当前页: ${val}`)
+      // console.log(`当前页: ${val}`)
     },
     // 获取角色信息
     async getRoleList() {
       const { total, rows } = (await getRoleList(this.params))
       this.params.total = total
       this.roleList = rows
-      console.log(this.params.total)
+      console.log(this.roleList)
     },
     // 上一页
     prevBtn() {
@@ -123,9 +132,28 @@ export default {
       // console.log(this.formData)
     },
     // 删除角色
-    async deleteRole() {
-      const res = await deleteRole(this.roleList.id)
-      console.log(res)
+    deleteRole(id) {
+      this.$confirm('此操作将永久删除该角色, 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(async() => {
+        try {
+          await deleteRole(id)
+          this.getRoleList()
+          this.$message({
+            type: 'success',
+            message: '删除成功!'
+          })
+        } catch (error) {
+          console.log(error)
+        }
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消删除'
+        })
+      })
     }
   }
 }
