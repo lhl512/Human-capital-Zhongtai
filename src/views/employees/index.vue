@@ -6,7 +6,7 @@
         <template slot="after">
           <el-button size="small" type="warning">导入</el-button>
           <el-button size="small" type="danger">导出</el-button>
-          <el-button size="small" type="primary">新增员工</el-button>
+          <el-button size="small" type="primary" @click="showDialog =true">新增员工</el-button>
         </template>
       </page-tools>
       <!-- 放置表格和分页 -->
@@ -56,7 +56,7 @@
           > />
           </el-pagination></el-row>
       </el-card>
-      <addEmployee :show-dialog="showDialog" />
+      <addEmployee :show-dialog.sync="showDialog" />
     </div>
   </div>
 </template>
@@ -111,7 +111,7 @@ export default {
     },
     // 格式化聘用形式
     formatEmployment(row, column, cellValue, index) {
-      console.log(row, column, cellValue, index)
+      // console.log(row, column, cellValue, index)
       const obj = EmployeeEnum.hireType.find(item => item.id === cellValue)
       return obj ? obj.value : '未知'
     },
