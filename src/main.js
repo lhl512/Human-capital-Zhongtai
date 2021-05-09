@@ -29,6 +29,12 @@ Vue.directive('imgerr', imgerr)
 // 注册全局组件
 import myComponents from '@/components'
 Vue.use(myComponents)
+
+// 过滤器
+import * as filters from '@/filters'
+Object.keys(filters).forEach(key => {
+  Vue.filter(key, filters[key])
+})
 new Vue({
   el: '#app',
   router,
