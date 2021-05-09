@@ -26,6 +26,9 @@ Vue.config.productionTip = false
 import { imgerr } from '@/directive'
 Vue.directive('imgerr', imgerr)
 
+// 注册全局组件
+import myComponents from '@/components'
+Vue.use(myComponents)
 new Vue({
   el: '#app',
   router,
