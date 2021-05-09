@@ -36,3 +36,11 @@ export function getRoleInfo(id) {
     url: `/sys/role/${id}`
   })
 }
+// 根据ID更新角色
+export function updateRole(data) {
+  return request({
+    method: 'put',
+    url: `/sys/role/${data.id}`,
+    data
+  })
+}

@@ -87,7 +87,7 @@
 </template>
 
 <script>
-import { getRoleList, getCompanyInfo, deleteRole, addRole, getRoleInfo } from '@/api/setting'
+import { getRoleList, getCompanyInfo, deleteRole, addRole, getRoleInfo, updateRole } from '@/api/setting'
 export default {
   data() {
     return {
@@ -204,7 +204,14 @@ export default {
     async btnOK() {
       try {
         await this.$refs.roleForm.validate()
-        await addRole(this.roleForm)
+
+        if (this.roleForm.id) {
+          // 编辑
+          await updateRole(this.roleForm)
+        } else {
+          // 新增
+          await addRole(this.roleForm)
+        }
         this.getRoleList()
         this.$message.success('操作成功')
         this.showDialog = false
