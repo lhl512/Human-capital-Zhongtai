@@ -50,10 +50,12 @@ export default {
       const { depts } = await getDepartments()
       let isRepeat = false
       if (this.formData.id) {
-        isRepeat = depts.filter(item => item.pid === this.treeNodes.id && item.id !== this.treeNodes.id)
+        //  编辑
+        isRepeat = depts.filter(item => item.pid === this.treeNodes.pid && item.id !== this.treeNodes.id)
           .some(item => item.name === value)
         isRepeat ? callback(new Error('同部门下不能重名')) : callback()
       } else {
+        // 新增
         isRepeat = depts.filter(item => item.pid === this.treeNodes.id)
           .some(item => item.name === value)
         isRepeat ? callback(new Error('同部门下不能重名')) : callback()

@@ -6,8 +6,6 @@
         <TreeTools :tree-noods="company" :is-root="true" @addDepts="addDepts" />
         <hr>
         <el-tree :data="departs" :props="{label:'name'}" :default-expand-all="true" :expand-on-click-node="false">
-          <!-- 传入内容 插槽内容 会循环多次 有多少节点 就循环多少次 -->
-          <!-- 作用域插槽 slot-scope="obj" 接收传递给插槽的数据   data 每个节点的数据对象-->
           <template #default="scoped">
             <TreeTools :tree-noods="scoped.data" :is-root="false" @delDepartments="getDepartments" @addDepts="addDepts" @editDepts="editDepts" />
           </template>
