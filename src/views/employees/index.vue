@@ -100,12 +100,12 @@ export default {
     handleSizeChange(val) {
       this.page.size = val
       this.getEmployeesInfo()
-      console.log(`每页 ${val} 条`)
+      // console.log(`每页 ${val} 条`)
     },
     handleCurrentChange(val) {
       this.page.page = val
       this.getEmployeesInfo()
-      console.log(`当前页: ${val}`)
+      // console.log(`当前页: ${val}`)
     },
     handlePrev() {
       this.page.page++

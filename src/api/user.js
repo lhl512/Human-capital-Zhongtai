@@ -27,3 +27,4 @@ export function getUserSimle() {
     url: '/sys/user/simple'
   })
 }
+
