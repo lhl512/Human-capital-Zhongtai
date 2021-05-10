@@ -1,8 +1,8 @@
 <template>
   <div class="dashboard-container">
     <div class="app-container">
-      <page-tools :show-before="true">
-        <span slot="before">共166条记录</span>
+      <page-tools :show-before="false">
+        <!-- <span slot="before">共166条记录</span> -->
         <template slot="after">
           <el-button size="small" type="warning">导入</el-button>
           <el-button size="small" type="danger">导出</el-button>
@@ -12,7 +12,11 @@
       <!-- 放置表格和分页 -->
       <el-card>
         <el-table border :data="list">
-          <el-table-column label="序号" sortable="" type="index" />
+          <el-table-column label="序号" sortable="" type="index">
+            <template slot-scope="scope">
+              {{ (page.page -1) * page.size + (scope.$index+1) }}
+            </template>
+          </el-table-column>
           <el-table-column label="姓名" sortable="" prop="username" />
           <el-table-column label="工号" sortable="" prop="workNumber" />
           <el-table-column
@@ -37,7 +41,7 @@
               <el-button type="text" size="small">调岗</el-button>
               <el-button type="text" size="small">离职</el-button>
               <el-button type="text" size="small">角色</el-button>
-              <el-button type="text" size="small" @click="deleteEmployees(row.id)">删除</el-button>
+              <el-button type="text" size="small" style="color:#ccc" @click="deleteEmployees(row.id)">删除</el-button>
             </template>
           </el-table-column>
         </el-table>
@@ -65,6 +69,7 @@
 import EmployeeEnum from '@/api/constant/employees'
 import { getEmployeesInfo, deleteEmployees } from '@/api/employees'
 import addEmployee from './components/add-employee'
+
 export default {
   components: {
     addEmployee
@@ -79,6 +84,7 @@ export default {
         size: 5,
         total: 0
       }
+
     }
   },
   created() {
@@ -122,10 +128,14 @@ export default {
         await deleteEmployees(id)
         this.getEmployeesInfo()
         this.$message.success('删除员工成功!')
+        if (this.list.length === 1 && this.page.page > 1) {
+          this.page.page--
+        }
       } catch (error) {
         console.log(error)
       }
     }
+
   }
 }
 </script>
