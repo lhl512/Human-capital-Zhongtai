@@ -53,7 +53,7 @@ import EmployeeEnum from '@/api/constant/employees'
 import { getDepartments } from '@/api/departments'
 import { listToTreeData } from '@/utils'
 import { addEmployess } from '@/api/employees'
-import { getUserSimle } from '@/api/user'
+
 export default {
   props: {
     showDialog: {
@@ -62,10 +62,6 @@ export default {
     }
   },
   data() {
-    const checkRepeatWorkNumber = async(rule, value, callback) => {
-      const res = await getUserSimle()
-      console.log(res)
-    }
     return {
       EmployeeEnum,
       formData: {
