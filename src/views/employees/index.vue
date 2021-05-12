@@ -5,7 +5,7 @@
         <!-- <span slot="before">共166条记录</span> -->
         <template slot="after">
           <el-button size="small" type="warning" @click="$router.push('/import')">导入</el-button>
-          <el-button size="small" type="danger">导出</el-button>
+          <el-button size="small" type="danger" @click="exportEmployees">导出</el-button>
           <el-button size="small" type="primary" @click="showDialog =true">新增员工</el-button>
         </template>
       </page-tools>
@@ -36,7 +36,7 @@
           </el-table-column>
           <el-table-column label="操作" sortable="" fixed="right" width="280">
             <template slot-scope="{row}">
-              <el-button type="text" size="small">查看</el-button>
+              <el-button type="text" size="small" @click="$router.push(`/employees/detail/${row.id}`)">查看</el-button>
               <el-button type="text" size="small">转正</el-button>
               <el-button type="text" size="small">调岗</el-button>
               <el-button type="text" size="small">离职</el-button>
@@ -69,7 +69,7 @@
 import EmployeeEnum from '@/api/constant/employees'
 import { getEmployeesInfo, deleteEmployees } from '@/api/employees'
 import addEmployee from './components/add-employee'
-
+import { formatDate } from '@/filters'
 export default {
   components: {
     addEmployee
@@ -134,8 +134,48 @@ export default {
       } catch (error) {
         console.log(error)
       }
-    }
+    },
+    async  exportEmployees() {
+      const { rows } = await getEmployeesInfo({ page: 1, size: this.page.total })
+      const dict = {
+        '姓名': 'username',
+        '手机号': 'mobile',
+        '入职日期': 'timeOfEntry',
+        '聘用形式': 'formOfEmployment',
+        '转正日期': 'correctionTime',
+        '工号': 'workNumber',
+        '部门': 'departmentName'
+      }
 
+      const userData = rows.map(user => {
+        return this.object2Arrayy(user, dict)
+      })
+      console.log(userData)
+
+      const { export_json_to_excel } = await import('@/vendor/Export2Excel')
+      console.log(export_json_to_excel)
+      export_json_to_excel({
+        header: Object.keys(dict),
+        data: userData
+      })
+    },
+    object2Arrayy(user, dict) {
+      const newUser = []
+      for (const key in dict) {
+        const enKey = dict[key]
+        if (enKey === 'formOfEmployment') {
+          // console.log(enKey)
+          // user[enKey] === 1 ? user[enKey] = '正式' : user[enKey] = '非正式'
+          const obj = EmployeeEnum.hireType.find(obj => obj.id === user[enKey])
+          obj ? user[enKey] = obj.value : user[enKey] = '未知'
+        } else if (enKey === 'timeOfEntry' || enKey === 'correctionTime') {
+          user[enKey] = formatDate(user[enKey])
+        }
+        const value = user[enKey]
+        newUser.push(value)
+      }
+      return newUser
+    }
   }
 }
 </script>

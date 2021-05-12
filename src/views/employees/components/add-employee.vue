@@ -95,10 +95,10 @@ export default {
         ],
         departmentName: [
           { required: true, message: '部门不能为空', trigger: 'blur' }
-        ],
-        correctionTime: [
-          { required: true, message: '转正时间不能为空', trigger: 'blur' }
         ]
+        // correctionTime: [
+        //   { required: true, message: '转正时间不能为空', trigger: 'blur' }
+        // ]
       },
       treeData: [],
       showTree: false,
