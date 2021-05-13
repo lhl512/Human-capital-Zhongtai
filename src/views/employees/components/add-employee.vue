@@ -18,7 +18,7 @@
         </el-select>
       </el-form-item>
       <el-form-item label="工号" prop="workNumber">
-        <el-input v-model="formData.workNumber" style="width:50%" placeholder="请输入工号" />
+        <el-input v-model.number="formData.workNumber" style="width:50%" placeholder="请输入工号" />
       </el-form-item>
       <el-form-item ref="dName" label="部门" prop="departmentName">
         <el-input v-model="formData.departmentName" style="width:50%" placeholder="请选择部门" @focus="getDepartments" @blur="checkDepartmentName" />
@@ -29,6 +29,7 @@
           :data="treeData"
           default-expand-all=""
           :props="{ label: 'name' }"
+          class="detpsTree"
           @node-click="selectNode"
         />
       </el-form-item>
@@ -156,6 +157,12 @@ export default {
 }
 </script>
 
-<style>
-
+<style  scoped>
+.detpsTree{
+  position: absolute;
+  z-index: 99;
+  width: 50%;
+  overflow: auto;
+  height: 170px;
+}
 </style>

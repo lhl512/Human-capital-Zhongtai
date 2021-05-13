@@ -32,3 +32,12 @@ export function importEmployess(data) {
     data
   })
 }
+
+// 修改员工信息
+export function updateEmployess(data) {
+  return request({
+    url: '/sys/user/' + data.id,
+    method: 'put',
+    data
+  })
+}
