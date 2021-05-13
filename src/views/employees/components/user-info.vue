@@ -285,7 +285,7 @@
 <script>
 import EmployeeEnum from '@/api/constant/employees'
 import { getUserDetailById } from '@/api/user'
-import { getPersonalInfo, updatePersonal, saveUserDetailById, updateEmployess } from '@/api/employees'
+import { getPersonalInfo, updatePersonal, updateEmployess } from '@/api/employees'
 export default {
   data() {
     return {

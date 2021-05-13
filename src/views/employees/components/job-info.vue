@@ -159,6 +159,8 @@
 </template>
 <script>
 import EmployeeEnum from '@/api/constant/employees'
+import { getUserSimle } from '@/api/user'
+import { updateJob, getJobDetail } from '@/api/employees'
 export default {
   data() {
     return {
@@ -195,12 +197,26 @@ export default {
       }
     }
   },
+  created() {
+    this.getJobDetail()
+    this.getUserSimle()
+  },
   methods: {
-    saveJob() {
-
+    async getJobDetail() {
+      this.formData = await getJobDetail(this.userId)
+    },
+    // 获取员工列表
+    async getUserSimle() {
+      this.depts = await getUserSimle()
+    },
+    // 保存岗位信息
+    async saveJob() {
+      await updateJob(this.formData)
+      this.$message.success('保存岗位信息成功')
     }
   }
 }
+
 </script>
 
 <style>
